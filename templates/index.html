@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Research Paper Scraper</title>
+
+    <style>
+        /* Add some basic CSS styles for the dropdown button and abstract content */
+        .dropdown-btn {
+            padding: 5px 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .abstract-content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Research Paper Scraper</h1>
+
+    <form action="/scrape" method="post">
+        <label for="conference">Conference:</label><br>
+        <input type="text" id="conference" name="conference"><br>
+        <label for="keywords">Keywords (comma-separated):</label><br>
+        <input type="text" id="keywords" name="keywords"><br><br>
+        <input type="submit" value="Scrape Papers">
+    </form>
+
+    {% if results %}
+        <h2>Scraped Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Document Title</th>
+                    <th>Authors</th>
+                    <th>Publication Year</th>
+                    <th>Implementation?</th>
+                    <th>PDF Link</th>
+                    <th>Abstract Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result['Document Title'] }}</td>
+                        <td>{{ result['Authors'] }}</td>
+                        <td>{{ result['Publication Year'] }}</td>
+                        <td>{{ result['Implementation?'] }}</td>
+                        <td><a href="{{ result['PDF Link'] }}" target="_blank">PDF Link</a></td>
+                        <td>
+                            <button class="dropdown-btn" onclick="toggleAbstract('{{ result['Document Title'] }}')">Show Abstract</button>
+                            <div id="{{ result['Document Title'] }}-abstract" class="abstract-content">
+                                <em>{{ result['Abstract Summary'] }}</em>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <script>
+        // Add JavaScript to toggle the visibility of the abstract content when the button is clicked
+        function toggleAbstract(title) {
+            var abstractContent = document.getElementById(title + "-abstract");
+            if (abstractContent.style.display === "none") {
+                abstractContent.style.display = "block";
+            } else {
+                abstractContent.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
